@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ToolShare - Share Tools with Neighbors</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header" id="appHeader">
+            <h1>ToolShare</h1>
+            <div class="header-right">
+                <div class="trust-badge hidden" id="trustBadge">Trust: 100</div>
+                <button class="btn-logout hidden" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content hidden" id="mainContent">
+            <!-- Explore View -->
+            <div class="view" id="exploreView">
+                <div class="map-container">
+                    <div id="map">
+                        <div style="padding: 2rem; text-align: center; color: #666;">
+                            Loading map...
+                        </div>
+                    </div>
+                    <div class="map-overlay">
+                        <button class="btn-primary" id="getLocationBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            Use My Location
+                        </button>
+                    </div>
+                </div>
+                <div class="tools-list" id="toolsList">
+                    <div class="loading">Loading nearby tools...</div>
+                </div>
+            </div>
+
+            <!-- My Tools View -->
+            <div class="view hidden" id="myToolsView">
+                <div class="section-header">
+                    <h2>My Tools</h2>
+                </div>
+                <div class="tools-grid" id="myToolsList">
+                    <div class="loading">Loading your tools...</div>
+                </div>
+            </div>
+
+            <!-- Profile View -->
+            <div class="view hidden" id="profileView">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h2 id="profileName">Loading...</h2>
+                    <div class="trust-score-large" id="profileTrustScore">Trust Score: 100</div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="toolsOwned">0</div>
+                            <div class="stat-label">Tools Owned</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="toolsBorrowed">0</div>
+                            <div class="stat-label">Tools Borrowed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-activity" id="recentActivity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list"></div>
+                </div>
+            </div>
+
+            <!-- Scan View -->
+            <div class="view hidden" id="scanView">
+                <div class="scanner-container">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-overlay">
+                        <div class="scanner-frame"></div>
+                        <p class="scanner-hint">Position QR code within frame</p>
+                    </div>
+                    <div class="scanner-results hidden" id="scannerResults">
+                        <div class="result-card">
+                            <h3 id="scannedToolName"></h3>
+                            <p id="scannedToolInfo"></p>
+                            <button class="btn-primary" id="checkoutBtn">Checkout Tool</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottomNav">
+            <button class="nav-item active" data-view="explore">
+                <span class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                </span>
+                <span class="nav-label">Explore</span>
+            </button>
+            <button class="nav-item" data-view="myTools">
+                <span class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                    </svg>
+                </span>
+                <span class="nav-label">My Tools</span>
+            </button>
+            <button class="nav-item" data-view="profile">
+                <span class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </span>
+                <span class="nav-label">Profile</span>
+            </button>
+            <button class="nav-item" data-view="scan">
+                <span class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                </span>
+                <span class="nav-label">Scan</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Login View -->
+    <div class="auth-container" id="loginView">
+        <div class="auth-card">
+            <h2>Welcome to ToolShare</h2>
+            <p class="auth-subtitle">Share tools with your neighbors</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary btn-full">Login</button>
+            </form>
+            
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+            
+            <button class="btn-secondary btn-full" id="showSignupBtn">Create Account</button>
+            
+            <div class="auth-error hidden" id="loginError"></div>
+        </div>
+    </div>
+
+    <!-- Signup View -->
+    <div class="auth-container hidden" id="signupView">
+        <div class="auth-card">
+            <h2>Create Account</h2>
+            <p class="auth-subtitle">Join your neighborhood tool sharing community</p>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
+                </div>
+                <button type="submit" class="btn-primary btn-full">Sign Up</button>
+            </form>
+            
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+            
+            <button class="btn-secondary btn-full" id="showLoginBtn">Already have an account? Login</button>
+            
+            <div class="auth-error hidden" id="signupError"></div>
+        </div>
+    </div>
+
+    <!-- Tool Detail Modal -->
+    <div class="modal hidden" id="toolModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <h2 id="modalToolName"></h2>
+            <div class="modal-info">
+                <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                <p><strong>Owner:</strong> <span id="modalOwner"></span></p>
+                <p><strong>Trust Score:</strong> <span id="modalTrustScore"></span></p>
+                <p><strong>Distance:</strong> <span id="modalDistance"></span></p>
+            </div>
+            <button class="btn-primary" id="requestToolBtn">Request Tool</button>
+        </div>
+    </div>
+
+    <!-- Load libraries with fallback error handling -->
+    <script>
+        // Check if scripts loaded successfully
+        window.leafletLoaded = false;
+        window.qrcodeLoaded = false;
+        
+        // Timeout for script loading
+        setTimeout(() => {
+            if (!window.leafletLoaded && typeof L === 'undefined') {
+                console.error('Leaflet failed to load - possible internet connection issue');
+                document.getElementById('map').innerHTML = '<div style="padding: 2rem; text-align: center; color: #666; background: #f5f5f5; border-radius: 8px; margin: 1rem;"><strong>⚠️ Internet Connection Required</strong><br><small>Map requires internet connection to load. Tools list below should still work.</small></div>';
+            }
+            if (!window.qrcodeLoaded && typeof Html5Qrcode === 'undefined') {
+                console.error('Html5Qrcode failed to load - possible internet connection issue');
+            }
+        }, 5000); // 5 second timeout
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onload="window.leafletLoaded = true;" onerror="console.error('Failed to load Leaflet from CDN');"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" onload="window.qrcodeLoaded = true;" onerror="console.error('Failed to load Html5Qrcode from CDN');"></script>
+    <script src="app.js"></script>
+</body>
+</html>

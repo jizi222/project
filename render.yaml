@@ -1,0 +1,12 @@
+# Render.com Blueprint - deploy at https://dashboard.render.com
+# Connect your GitHub repo, then Render will use this config.
+
+services:
+  - type: web
+    name: toolshare
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
