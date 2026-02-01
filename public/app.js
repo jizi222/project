@@ -181,6 +181,30 @@ function showLoginView() {
     document.getElementById('logoutBtn').classList.add('hidden');
 }
 
+// Update authentication UI elements
+function updateAuthUI() {
+    const trustBadge = document.getElementById('trustBadge');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (appState.isAuthenticated && appState.currentUser) {
+        // Show trust badge and logout button
+        if (trustBadge) {
+            trustBadge.classList.remove('hidden');
+            const trustScore = trustBadge.querySelector('.trust-score');
+            if (trustScore && appState.currentUser.trustScore !== undefined) {
+                trustScore.textContent = appState.currentUser.trustScore;
+            }
+        }
+        if (logoutBtn) {
+            logoutBtn.classList.remove('hidden');
+        }
+    } else {
+        // Hide trust badge and logout button
+        if (trustBadge) trustBadge.classList.add('hidden');
+        if (logoutBtn) logoutBtn.classList.add('hidden');
+    }
+}
+
 function showMainApp() {
     try {
         // Hide login/signup views
