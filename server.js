@@ -149,8 +149,10 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 // API: Get tools within 5-mile radius
 app.get('/api/get-tools', async (req, res) => {
   try {
+    console.log('Get tools request:', { query: req.query });
     const { lat, lng } = req.query;
     if (!lat || !lng) {
+      console.log('Get tools validation failed - missing lat/lng');
       return res.status(400).json({ error: 'Latitude and longitude are required' });
     }
 
@@ -361,9 +363,11 @@ app.get('/api/profile', async (req, res) => {
 // API: Sign up (Register)
 app.post('/api/signup', async (req, res) => {
   try {
+    console.log('Signup request received:', { body: req.body });
     const { name, email, password, lat, lng } = req.body;
     
     if (!name || !email || !password) {
+      console.log('Signup validation failed - missing fields');
       return res.status(400).json({ error: 'Name, email, and password are required' });
     }
 
@@ -404,9 +408,11 @@ app.post('/api/signup', async (req, res) => {
 // API: Login
 app.post('/api/login', async (req, res) => {
   try {
+    console.log('Login request received:', { body: req.body });
     const { email, password } = req.body;
     
     if (!email || !password) {
+      console.log('Login validation failed - missing fields');
       return res.status(400).json({ error: 'Email and password are required' });
     }
 

@@ -495,6 +495,13 @@ async function loadNearbyTools() {
         return;
     }
     
+    // Validate coordinates before making request
+    if (!lat || !lng || isNaN(parseFloat(lat)) || isNaN(parseFloat(lng))) {
+        console.error('Invalid coordinates:', { lat, lng });
+        toolsList.innerHTML = '<div class="error-message">Unable to load tools - invalid location data</div>';
+        return;
+    }
+    
     toolsList.innerHTML = '<div class="loading">Loading nearby tools...</div>';
     
     try {
