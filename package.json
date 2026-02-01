@@ -1,5 +1,5 @@
 {
-  "name": "toolshare",
+  "name": "lendify",
   "version": "1.0.0",
   "description": "Community-driven marketplace for neighbors to share tools",
   "main": "server.js",

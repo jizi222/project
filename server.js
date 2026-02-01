@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Health check for deployment platforms
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'ToolShare is running' });
+  res.json({ status: 'ok', message: 'Lendify is running' });
 });
 
 // Note: Static files are served after API routes to ensure API routes are checked first
@@ -435,5 +435,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`ToolShare server running on port ${PORT}`);
+  console.log(`Lendify server running on port ${PORT}`);
 });

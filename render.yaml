@@ -3,7 +3,7 @@
 
 services:
   - type: web
-    name: toolshare
+    name: lendify
     runtime: node
     buildCommand: npm install
     startCommand: npm start

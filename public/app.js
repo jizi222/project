@@ -1,4 +1,4 @@
-// ToolShare - Main Application Logic
+// Lendify - Main Application Logic
 
 // App State
 const appState = {
@@ -12,14 +12,14 @@ const appState = {
 
 // Check if user is logged in
 function checkAuth() {
-    const savedUser = localStorage.getItem('toolshare_user');
+    const savedUser = localStorage.getItem('lendify_user');
     if (savedUser) {
         try {
             appState.currentUser = JSON.parse(savedUser);
             appState.isAuthenticated = true;
             return true;
         } catch (e) {
-            localStorage.removeItem('toolshare_user');
+            localStorage.removeItem('lendify_user');
         }
     }
     return false;
@@ -71,7 +71,7 @@ function initializeAuth() {
             if (data.success) {
                 appState.currentUser = data.user;
                 appState.isAuthenticated = true;
-                localStorage.setItem('toolshare_user', JSON.stringify(data.user));
+                localStorage.setItem('lendify_user', JSON.stringify(data.user));
                 document.getElementById('loginForm').reset();
                 document.getElementById('loginError').classList.add('hidden');
                 showMainApp();
@@ -134,7 +134,7 @@ function initializeAuth() {
             if (data.success) {
                 appState.currentUser = data.user;
                 appState.isAuthenticated = true;
-                localStorage.setItem('toolshare_user', JSON.stringify(data.user));
+                localStorage.setItem('lendify_user', JSON.stringify(data.user));
                 document.getElementById('signupForm').reset();
                 document.getElementById('signupError').classList.add('hidden');
                 showMainApp();
@@ -164,7 +164,7 @@ function initializeAuth() {
     document.getElementById('logoutBtn').addEventListener('click', () => {
         appState.currentUser = null;
         appState.isAuthenticated = false;
-        localStorage.removeItem('toolshare_user');
+        localStorage.removeItem('lendify_user');
         showLoginView();
     });
     } catch (error) {
@@ -228,7 +228,7 @@ function showMainApp() {
                     lng: position.coords.longitude
                 };
                 if (appState.isAuthenticated) {
-                    localStorage.setItem('toolshare_user', JSON.stringify(appState.currentUser));
+                    localStorage.setItem('lendify_user', JSON.stringify(appState.currentUser));
                 }
                 if (appState.map) {
                     appState.map.setView([position.coords.latitude, position.coords.longitude], 13);
@@ -459,7 +459,7 @@ function tryInitializeMap(mapContainer) {
                             }
                             appState.currentUser.location = { lat, lng };
                             if (appState.isAuthenticated) {
-                                localStorage.setItem('toolshare_user', JSON.stringify(appState.currentUser));
+                                localStorage.setItem('lendify_user', JSON.stringify(appState.currentUser));
                             }
                             if (appState.map) {
                                 appState.map.setView([lat, lng], 13);
@@ -851,7 +851,7 @@ async function loadUserProfile() {
         
         if (data.user) {
             appState.currentUser = { ...appState.currentUser, ...data.user };
-            localStorage.setItem('toolshare_user', JSON.stringify(appState.currentUser));
+            localStorage.setItem('lendify_user', JSON.stringify(appState.currentUser));
             updateProfileDisplay();
             updateTrustBadge();
         }

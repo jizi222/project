@@ -1,4 +1,4 @@
-# Deploy ToolShare Live
+# Deploy Lendify Live
 
 Your app is ready to go live. Here’s how to deploy it for free.
 
@@ -10,7 +10,7 @@ Your app is ready to go live. Here’s how to deploy it for free.
    ```bash
    git init
    git add .
-   git commit -m "ToolShare app"
+   git commit -m "Lendify app"
    git branch -M main
    git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
    git push -u origin main
@@ -25,7 +25,7 @@ Your app is ready to go live. Here’s how to deploy it for free.
      - **Start Command:** `npm start`
      - **Instance Type:** Free
    - Click **Create Web Service**.
-   - Wait for the first deploy. You’ll get a URL like `https://toolshare-xxxx.onrender.com`.
+   - Wait for the first deploy. You’ll get a URL like `https://lendify-xxxx.onrender.com`.
 
 3. **Use your live app**
    - Open that URL in a browser. The app uses relative URLs, so it works on the live domain.
@@ -64,4 +64,4 @@ Your app is ready to go live. Here’s how to deploy it for free.
 - **Health check:** `GET /api/health` returns `{ status: 'ok' }` for platform checks.
 - **API calls:** The frontend uses relative paths (e.g. `/api/login`), so it works on any domain.
 
-After deploying, share your live URL (e.g. `https://toolshare-xxxx.onrender.com`) so others can use ToolShare.
+After deploying, share your live URL (e.g. `https://lendify-xxxx.onrender.com`) so others can use Lendify.
