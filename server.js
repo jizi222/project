@@ -24,9 +24,11 @@ async function initializeDatabase() {
     await fs.access(DB_PATH);
     // Database exists, read it
     const data = await fs.readFile(DB_PATH, 'utf8');
+    console.log('Database loaded successfully');
     return JSON.parse(data);
   } catch (error) {
     // Database doesn't exist, create with dummy data
+    console.log('Creating new database with dummy data...');
     const dummyData = {
       users: [
         {
@@ -121,7 +123,13 @@ async function initializeDatabase() {
       checkouts: [],
       ratings: []
     };
-    await fs.writeFile(DB_PATH, JSON.stringify(dummyData, null, 2));
+    try {
+      await fs.writeFile(DB_PATH, JSON.stringify(dummyData, null, 2));
+      console.log('Database created successfully at:', DB_PATH);
+    } catch (writeError) {
+      console.error('Failed to write database file:', writeError);
+      console.log('Using in-memory database instead');
+    }
     return dummyData;
   }
 }
@@ -434,6 +442,17 @@ app.get('*', (req, res) => {
   }
 });
 
+// Add error handling for unhandled errors
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Lendify server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Database path: ${DB_PATH}`);
 });
