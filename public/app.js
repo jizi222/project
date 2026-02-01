@@ -261,10 +261,21 @@ function showMainApp() {
                 loadNearbyTools();
             },
             (error) => {
-                console.log('Geolocation denied or failed, using default location:', error.message);
+                // Silently handle geolocation errors - app works fine with default location
+                if (error.code === error.PERMISSION_DENIED) {
+                    console.log('Location permission denied - using default location');
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    console.log('Location unavailable - using default location');
+                } else if (error.code === error.TIMEOUT) {
+                    console.log('Location request timeout - using default location');
+                }
                 // Already using default location, tools already loaded
             },
-            { timeout: 5000 } // 5 second timeout
+            { 
+                enableHighAccuracy: false, // Don't require GPS, reduces Google API calls
+                timeout: 5000,
+                maximumAge: 300000 // Cache location for 5 minutes
+            }
         );
     }
     } catch (error) {
